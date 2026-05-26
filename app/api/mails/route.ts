@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 import { CreateMailInput } from '@/lib/types';
 
+// Force dynamic rendering — env vars not available at build time
+export const dynamic = 'force-dynamic';
+
 // GET /api/mails?category=inbox
 export async function GET(request: NextRequest) {
   const supabase = createServerClient();

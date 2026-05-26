@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase';
 
+// Force dynamic rendering — env vars not available at build time
+export const dynamic = 'force-dynamic';
+
 // POST /api/upload
 // Body: FormData with field "file" and field "mail_id"
 export async function POST(request: NextRequest) {
