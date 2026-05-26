@@ -99,6 +99,7 @@
 :root[data-theme='light'] ::-webkit-scrollbar-thumb {
   background: rgba(0, 0, 0, 0.2);
 }
+
 :root[data-theme='light'] ::-webkit-scrollbar-thumb:hover {
   background: rgba(0, 0, 0, 0.3);
 }
@@ -1064,7 +1065,7 @@ body {
 .form-label {
   font-size: 12px;
   font-weight: 600;
-  color: white;
+  color: var(--text-primary);
   text-transform: uppercase;
   letter-spacing: 0.06em;
   display: flex;
@@ -1602,8 +1603,13 @@ body {
 }
 
 @keyframes orb-float {
-  from { transform: translate(0, 0) scale(1); }
-  to   { transform: translate(30px, 20px) scale(1.1); }
+  from {
+    transform: translate(0, 0) scale(1);
+  }
+
+  to {
+    transform: translate(30px, 20px) scale(1.1);
+  }
 }
 
 .login-card {
@@ -1806,7 +1812,9 @@ body {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .login-footer {
