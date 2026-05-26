@@ -1,0 +1,40 @@
+{
+  "name": "dr-aboelfath-mail",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AhmedAbdullah125/Dr-AboElfath-Mail.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/AhmedAbdullah125/Dr-AboElfath-Mail/issues"
+  },
+  "homepage": "https://github.com/AhmedAbdullah125/Dr-AboElfath-Mail#readme",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.106.2",
+    "@types/node": "^25.9.1",
+    "@types/react": "^19.2.15",
+    "@types/react-dom": "^19.2.3",
+    "@types/uuid": "^10.0.0",
+    "eslint": "^9.39.4",
+    "eslint-config-next": "^16.2.6",
+    "lucide-react": "^1.16.0",
+    "next": "^14.2.35",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "typescript": "^6.0.3",
+    "uuid": "^14.0.0"
+  }
+}
