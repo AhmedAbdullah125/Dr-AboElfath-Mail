@@ -11,13 +11,17 @@ export const metadata: Metadata = {
   keywords: ['mail', 'email manager', 'correspondence', 'Dr. Abo Elfath'],
 };
 
+import { ThemeProvider } from '@/context/ThemeContext';
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={inter.variable}>
       <body>
-        <MailProvider>
-          {children}
-        </MailProvider>
+        <ThemeProvider>
+          <MailProvider>
+            {children}
+          </MailProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

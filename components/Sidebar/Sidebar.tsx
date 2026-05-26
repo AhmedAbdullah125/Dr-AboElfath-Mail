@@ -1,7 +1,8 @@
 'use client';
 
-import { Inbox, Send, AlertTriangle, Star, Mail, Plus, LogOut, KeyRound } from 'lucide-react';
+import { Inbox, Send, AlertTriangle, Star, Mail, Plus, LogOut, KeyRound, Sun, Moon } from 'lucide-react';
 import { useMail } from '@/context/MailContext';
+import { useTheme } from '@/context/ThemeContext';
 import { MailCategory } from '@/lib/types';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -16,6 +17,7 @@ const CATEGORIES: { id: MailCategory; label: string; icon: React.ElementType }[]
 
 export default function Sidebar() {
   const { state, dispatch, fetchMails } = useMail();
+  const { theme, toggleTheme } = useTheme();
   const router = useRouter();
 
   function handleCategoryClick(cat: MailCategory) {
@@ -99,6 +101,16 @@ export default function Sidebar() {
             <span className="sidebar-user-role">Administrator</span>
           </div>
         </div>
+        <button
+          className="logout-btn"
+          onClick={toggleTheme}
+          id="theme-toggle-btn"
+          aria-label="Toggle theme"
+          style={{ color: 'var(--text-muted)' }}
+        >
+          {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
+          <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
+        </button>
         <button
           className="logout-btn"
           onClick={() => router.push('/change-password')}
