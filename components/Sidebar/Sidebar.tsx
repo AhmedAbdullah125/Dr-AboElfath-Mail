@@ -1,6 +1,6 @@
 'use client';
 
-import { Inbox, Send, AlertTriangle, Star, Mail, Plus, LogOut } from 'lucide-react';
+import { Inbox, Send, AlertTriangle, Star, Mail, Plus, LogOut, KeyRound } from 'lucide-react';
 import { useMail } from '@/context/MailContext';
 import { MailCategory } from '@/lib/types';
 import { useEffect } from 'react';
@@ -99,6 +99,16 @@ export default function Sidebar() {
             <span className="sidebar-user-role">Administrator</span>
           </div>
         </div>
+        <button
+          className="logout-btn"
+          onClick={() => router.push('/change-password')}
+          id="change-password-btn"
+          aria-label="Change password"
+          style={{ color: 'var(--text-muted)' }}
+        >
+          <KeyRound size={14} />
+          <span>Change Password</span>
+        </button>
         <button
           className="logout-btn"
           onClick={handleLogout}
