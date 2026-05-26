@@ -166,6 +166,12 @@ body {
   flex-shrink: 0;
 }
 
+.logo-image {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+}
+
 .sidebar-logo-text {
   display: flex;
   flex-direction: column;

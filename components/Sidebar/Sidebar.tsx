@@ -4,6 +4,8 @@ import { Inbox, Send, AlertTriangle, Star, Mail, Plus } from 'lucide-react';
 import { useMail } from '@/context/MailContext';
 import { MailCategory } from '@/lib/types';
 import { useEffect } from 'react';
+import Logo from '@/components/dr.svg';
+import Image from 'next/image';
 
 
 const CATEGORIES: { id: MailCategory; label: string; icon: React.ElementType }[] = [
@@ -40,7 +42,8 @@ export default function Sidebar() {
         <div className="sidebar-logo">
           <div className="sidebar-logo-icon">
 
-            <Mail size={18} color="white" />
+            {/* <Mail size={18} color="white" /> */}
+            <Image className='logo-image' src={Logo} alt="Logo" width={500} height={500} />
           </div>
           <div className="sidebar-logo-text">
             <span className="sidebar-logo-name">Mail Manager</span>
