@@ -10,18 +10,23 @@ export async function GET(
   _request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const supabase = createServerClient();
-  const { data, error } = await supabase
-    .from('mails')
-    .select(`*, attachments:mail_attachments(*)`)
-    .eq('id', params.id)
-    .single();
+  try {
+    const supabase = createServerClient();
+    const { data, error } = await supabase
+      .from('mails')
+      .select(`*, attachments:mail_attachments(*)`)
+      .eq('id', params.id)
+      .single();
 
-  if (error) {
-    return NextResponse.json({ data: null, error: error.message }, { status: 404 });
+    if (error) {
+      return NextResponse.json({ data: null, error: error.message }, { status: 404 });
+    }
+
+    return NextResponse.json({ data, error: null });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Unexpected server error';
+    return NextResponse.json({ data: null, error: message }, { status: 500 });
   }
-
-  return NextResponse.json({ data, error: null });
 }
 
 // PUT /api/mails/[id]
@@ -29,23 +34,28 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const supabase = createServerClient();
-  const body: UpdateMailInput = await request.json();
+  try {
+    const supabase = createServerClient();
+    const body: UpdateMailInput = await request.json();
+    const { id, ...updates } = body;
+    void id; // id comes from URL params
 
-  const { id, ...updates } = body;
+    const { data, error } = await supabase
+      .from('mails')
+      .update({ ...updates, updated_at: new Date().toISOString() })
+      .eq('id', params.id)
+      .select(`*, attachments:mail_attachments(*)`)
+      .single();
 
-  const { data, error } = await supabase
-    .from('mails')
-    .update({ ...updates, updated_at: new Date().toISOString() })
-    .eq('id', params.id)
-    .select(`*, attachments:mail_attachments(*)`)
-    .single();
+    if (error) {
+      return NextResponse.json({ data: null, error: error.message }, { status: 500 });
+    }
 
-  if (error) {
-    return NextResponse.json({ data: null, error: error.message }, { status: 500 });
+    return NextResponse.json({ data, error: null });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Unexpected server error';
+    return NextResponse.json({ data: null, error: message }, { status: 500 });
   }
-
-  return NextResponse.json({ data, error: null });
 }
 
 // DELETE /api/mails/[id]
@@ -53,27 +63,39 @@ export async function DELETE(
   _request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const supabase = createServerClient();
+  try {
+    const supabase = createServerClient();
 
-  // Delete attachments from storage first
-  const { data: attachments } = await supabase
-    .from('mail_attachments')
-    .select('file_url, file_name')
-    .eq('mail_id', params.id);
+    // Delete attachments from storage first
+    const { data: attachments } = await supabase
+      .from('mail_attachments')
+      .select('file_url, file_name')
+      .eq('mail_id', params.id);
 
-  if (attachments && attachments.length > 0) {
-    const paths = attachments.map((a) => {
-      const url = new URL(a.file_url);
-      return url.pathname.split('/object/public/mail-attachments/')[1];
-    });
-    await supabase.storage.from('mail-attachments').remove(paths);
+    if (attachments && attachments.length > 0) {
+      const paths = attachments.map((a: { file_url: string }) => {
+        try {
+          const url = new URL(a.file_url);
+          return url.pathname.split('/object/public/mail-attachments/')[1];
+        } catch {
+          return null;
+        }
+      }).filter(Boolean) as string[];
+
+      if (paths.length > 0) {
+        await supabase.storage.from('mail-attachments').remove(paths);
+      }
+    }
+
+    const { error } = await supabase.from('mails').delete().eq('id', params.id);
+
+    if (error) {
+      return NextResponse.json({ data: null, error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json({ data: { id: params.id }, error: null });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Unexpected server error';
+    return NextResponse.json({ data: null, error: message }, { status: 500 });
   }
-
-  const { error } = await supabase.from('mails').delete().eq('id', params.id);
-
-  if (error) {
-    return NextResponse.json({ data: null, error: error.message }, { status: 500 });
-  }
-
-  return NextResponse.json({ data: { id: params.id }, error: null });
 }
