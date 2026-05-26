@@ -12,11 +12,9 @@ import { useMail } from '@/context/MailContext';
 import { v4 as uuidv4 } from 'uuid';
 
 export default function MailPage() {
-  const { deleteMail } = useMail();
-
-  // ─── Form State ──────────────────────────────────────────────────────────────
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [editingMail, setEditingMail] = useState<Mail | null>(null);
+  // ─── Read form state FROM context (so Sidebar compose button works) ──────────
+  const { state, dispatch, deleteMail } = useMail();
+  const { isFormOpen, editingMail } = state;
 
   // ─── Delete Confirm State ─────────────────────────────────────────────────
   const [deletingMail, setDeletingMail] = useState<Mail | null>(null);
@@ -35,19 +33,12 @@ export default function MailPage() {
   }, []);
 
   // ─── Handlers ────────────────────────────────────────────────────────────────
-  function openCreate() {
-    setEditingMail(null);
-    setIsFormOpen(true);
-  }
-
   function openEdit(mail: Mail) {
-    setEditingMail(mail);
-    setIsFormOpen(true);
+    dispatch({ type: 'OPEN_FORM', payload: mail });
   }
 
   function closeForm() {
-    setIsFormOpen(false);
-    setEditingMail(null);
+    dispatch({ type: 'CLOSE_FORM' });
   }
 
   function openDelete(mail: Mail) {
@@ -75,7 +66,7 @@ export default function MailPage() {
         <MailDetail onEdit={openEdit} onDelete={openDelete} />
       </div>
 
-      {/* Mail Form Modal */}
+      {/* Mail Form Modal — driven by context state so Compose button works */}
       {isFormOpen && (
         <MailForm
           editingMail={editingMail}
