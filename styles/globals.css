@@ -925,11 +925,18 @@ body {
   width: 100%;
   max-width: 660px;
   max-height: 90vh;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   box-shadow: var(--shadow-lg);
   animation: slideUp 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-  overflow: hidden;
+  /* hide scroll bar */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.modal-card::-webkit-scrollbar {
+  display: none;
 }
 
 @keyframes slideUp {

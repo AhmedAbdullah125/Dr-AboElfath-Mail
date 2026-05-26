@@ -5,10 +5,11 @@ import { useMail } from '@/context/MailContext';
 import { MailCategory } from '@/lib/types';
 import { useEffect } from 'react';
 
+
 const CATEGORIES: { id: MailCategory; label: string; icon: React.ElementType }[] = [
-  { id: 'inbox',     label: 'Inbox',     icon: Inbox },
-  { id: 'sent',      label: 'Sent',      icon: Send },
-  { id: 'spam',      label: 'Spam',      icon: AlertTriangle },
+  { id: 'inbox', label: 'Inbox', icon: Inbox },
+  { id: 'sent', label: 'Sent', icon: Send },
+  { id: 'spam', label: 'Spam', icon: AlertTriangle },
   { id: 'important', label: 'Important', icon: Star },
 ];
 
@@ -38,6 +39,7 @@ export default function Sidebar() {
       <div className="sidebar-header">
         <div className="sidebar-logo">
           <div className="sidebar-logo-icon">
+
             <Mail size={18} color="white" />
           </div>
           <div className="sidebar-logo-text">
