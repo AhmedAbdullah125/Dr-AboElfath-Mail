@@ -1,17 +1,31 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+// ─── Lazy browser client (singleton) ─────────────────────────────────────────
+// IMPORTANT: createClient is only called inside functions, never at module level.
+// This prevents Next.js from evaluating it during build when env vars don't exist.
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+let _browserClient: SupabaseClient | null = null;
 
-// Server-side client with elevated privileges (for API routes)
-export function createServerClient() {
-  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-  return createClient(supabaseUrl, serviceKey, {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false,
-    },
-  });
+export function getSupabase(): SupabaseClient {
+  if (!_browserClient) {
+    _browserClient = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+  }
+  return _browserClient;
+}
+
+// ─── Server-side client (fresh per request, service role) ────────────────────
+export function createServerClient(): SupabaseClient {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+      },
+    }
+  );
 }
