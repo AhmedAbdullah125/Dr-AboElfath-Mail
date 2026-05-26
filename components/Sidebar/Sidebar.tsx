@@ -1,12 +1,11 @@
 'use client';
 
-import { Inbox, Send, AlertTriangle, Star, Mail, Plus } from 'lucide-react';
+import { Inbox, Send, AlertTriangle, Star, Mail, Plus, LogOut } from 'lucide-react';
 import { useMail } from '@/context/MailContext';
 import { MailCategory } from '@/lib/types';
 import { useEffect } from 'react';
-import Logo from '@/components/dr.svg';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-
 
 const CATEGORIES: { id: MailCategory; label: string; icon: React.ElementType }[] = [
   { id: 'inbox', label: 'Inbox', icon: Inbox },
@@ -17,6 +16,7 @@ const CATEGORIES: { id: MailCategory; label: string; icon: React.ElementType }[]
 
 export default function Sidebar() {
   const { state, dispatch, fetchMails } = useMail();
+  const router = useRouter();
 
   function handleCategoryClick(cat: MailCategory) {
     dispatch({ type: 'SET_CATEGORY', payload: cat });
@@ -24,7 +24,6 @@ export default function Sidebar() {
   }
 
   function getCategoryCount(cat: MailCategory) {
-    // We don't load all categories, so only show for active
     if (cat === state.selectedCategory) return state.mails.length;
     return null;
   }
@@ -35,15 +34,19 @@ export default function Sidebar() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  async function handleLogout() {
+    await fetch('/api/auth/logout', { method: 'POST' });
+    router.push('/login');
+    router.refresh();
+  }
+
   return (
     <aside className="sidebar" role="navigation" aria-label="Mail categories">
       {/* Logo / Header */}
       <div className="sidebar-header">
         <div className="sidebar-logo">
           <div className="sidebar-logo-icon">
-
-            {/* <Mail size={18} color="white" /> */}
-            <Image className='logo-image' src={Logo} alt="Logo" width={500} height={500} />
+            <Mail size={18} color="white" />
           </div>
           <div className="sidebar-logo-text">
             <span className="sidebar-logo-name">Mail Manager</span>
@@ -96,6 +99,15 @@ export default function Sidebar() {
             <span className="sidebar-user-role">Administrator</span>
           </div>
         </div>
+        <button
+          className="logout-btn"
+          onClick={handleLogout}
+          id="logout-btn"
+          aria-label="Sign out"
+        >
+          <LogOut size={14} />
+          <span>Sign Out</span>
+        </button>
       </div>
     </aside>
   );
